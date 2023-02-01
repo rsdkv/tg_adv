@@ -1,4 +1,4 @@
-    from aiogram import Bot, types
+from aiogram import Bot, types
 from aiogram.dispatcher import Dispatcher
 from aiogram.utils import executor
 
@@ -61,47 +61,70 @@ async def command_start(message: types.Message):
                            reply_markup=nav.mainMenu)
 
 
-# меню
-@dp.message_handler()
-async def with_puree(message: types.Message):
-    # главное меню
-    if message.text == 'Главное меню':
-        await bot.send_message(message.from_user.id, 'Главное меню', reply_markup=nav.mainMenu)
-    elif message.text == 'Учиться':
-        await bot.send_message(message.from_user.id,
-                               'Здесь вы можете найти всё, что вам может понадобиться для обучения:\n' + edu_text,
-                               reply_markup=nav.eduMenu)
-    elif message.text == 'Стать лучше':
-        await bot.send_message(message.from_user.id,
-                               'Здесь вы можете найти все, что вам может понадобиться. Выберите интересующую вас тему',
-                               reply_markup=nav.traderMenu)
-    elif message.text == 'Развлечься':
-        await bot.send_message(message.from_user.id, 'Вы можете не только развлечься, но и прокачать свой мозг',
-                               reply_markup=nav.libraryMenu)
-        # библиотека подменю
-    elif message.text == 'Фильмы':
-        await bot.send_message(message.from_user.id, 'Список для просмотра:\n' + films_text,
-                               reply_markup=nav.filmsMenu)
-    elif message.text == 'Книги':
-        await bot.send_message(message.from_user.id, 'Список книг, которые могут изменить вышу жизнь:\n' + books_text,
-                               reply_markup=nav.booksMenu)
-    elif message.text == 'Музыка':
-        await bot.send_message(message.from_user.id, 'Ссылки на ресурсы для прослушивания:\n' + music_text,
-                               reply_markup=nav.musicsMenu)
-    elif message.text == 'Другие материалы':
-        await bot.send_message(message.from_user.id, 'Ссылки на ресурсы:\n' + links_text,
-                               reply_markup=nav.mainMenu)
-    elif message.text == 'Трейдеру':
-        await bot.send_message(message.from_user.id, 'Здесь есть всё, что вам может понадобиться',
-                               reply_markup=nav.traderMenu)
-    elif message.text == 'Арбитражи':
-        await bot.send_message(message.from_user.id, text_arbitrage,
-                               reply_markup=nav.arbitrageMenu)
-    else:
-        await message.reply('Неизветсная команда')
+# # меню
+# @dp.message_handler()
+# async def with_puree(message: types.Message):
+#     # главное меню
+#     if message.text == 'Главное меню':
+#         await bot.send_message(message.from_user.id, 'Главное меню', reply_markup=nav.mainMenu)
+#     elif message.text == 'Учиться':
+#         await bot.send_message(message.from_user.id,
+#                                'Здесь вы можете найти всё, что вам может понадобиться для обучения:\n' + edu_text,
+#                                reply_markup=nav.eduMenu)
+#     elif message.text == 'Стать лучше':
+#         await bot.send_message(message.from_user.id,
+#                                'Здесь вы можете найти все, что вам может понадобиться. Выберите интересующую вас тему',
+#                                reply_markup=nav.traderMenu)
+#     elif message.text == 'Развлечься':
+#         await bot.send_message(message.from_user.id, 'Вы можете не только развлечься, но и прокачать свой мозг',
+#                                reply_markup=nav.libraryMenu)
+#         # библиотека подменю
+#     elif message.text == 'Фильмы':
+#         await bot.send_message(message.from_user.id, 'Список для просмотра:\n' + films_text,
+#                                reply_markup=nav.filmsMenu)
+#     elif message.text == 'Книги':
+#         await bot.send_message(message.from_user.id, 'Список книг, которые могут изменить вышу жизнь:\n' + books_text,
+#                                reply_markup=nav.booksMenu)
+#     elif message.text == 'Музыка':
+#         await bot.send_message(message.from_user.id, 'Ссылки на ресурсы для прослушивания:\n' + music_text,
+#                                reply_markup=nav.musicsMenu)
+#     elif message.text == 'Другие материалы':
+#         await bot.send_message(message.from_user.id, 'Ссылки на ресурсы:\n' + links_text,
+#                                reply_markup=nav.mainMenu)
+#     elif message.text == 'Трейдеру':
+#         await bot.send_message(message.from_user.id, 'Здесь есть всё, что вам может понадобиться',
+#                                reply_markup=nav.traderMenu)
+#     elif message.text == 'Арбитражи':
+#         await bot.send_message(message.from_user.id, text_arbitrage,
+#                                reply_markup=nav.arbitrageMenu)
+#     else:
+#         await message.reply('Неизветсная команда')
 
+@dp.message_handler(commands="inline_url")
+async def cmd_inline_url(message: types.Message):
+    buttons = [
+        types.InlineKeyboardButton(text="GitHub", url="https://github.com"),
+        types.InlineKeyboardButton(text="Оф. канал Telegram", url="tg://resolve?domain=telegram")
+        types.InlineKeyboardButton(text="Оф. канал Telegram", url="tg://resolve?domain=telegram")
+        types.InlineKeyboardButton(text="Оф. канал Telegram", url="tg://resolve?domain=telegram")
+        types.InlineKeyboardButton(text="Оф. канал Telegram", url="tg://resolve?domain=telegram")
+        types.InlineKeyboardButton(text="Оф. канал Telegram", url="tg://resolve?domain=telegram")
+    ]
+    keyboard = types.InlineKeyboardMarkup(row_width=1)
+    keyboard.add(*buttons)
+    await message.answer("Кнопки-ссылки", reply_markup=keyboard)
 
 # echo - заглушка
+
+# from aiogram import types
+@dp.message_handler(commands="start")
+async def cmd_start(message: types.Message):
+    keyboard = types.ReplyKeyboardMarkup()
+    button_1 = types.KeyboardButton(text="С пюрешкой")
+    keyboard.add(button_1)
+    button_2 = "Без пюрешки"
+    keyboard.add(button_2)
+    await message.answer("Как подавать котлеты?", reply_markup=keyboard)
 
 @dp.message_handler()
 async def echo_message(msg: types.Message):
