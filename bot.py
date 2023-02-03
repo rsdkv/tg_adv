@@ -1,16 +1,14 @@
 from aiogram import Bot, types
 from aiogram.dispatcher import Dispatcher
 from aiogram.utils import executor
-
-
+from random import randint
 from config import TOKEN
 
 import markup as nav
+import emoji
 
 bot = Bot(token=TOKEN)
 dp = Dispatcher(bot)
-
-
 
 # обработчик списка фильмов
 with open('text_films.txt', encoding='utf8') as f:
@@ -52,13 +50,13 @@ with open('text_arbitrage.txt', encoding='utf8') as f:
     text_arbitrage = f.read()
 
 
-# старт
-@dp.message_handler(commands=['start', 'начать', 'старт'])
-async def command_start(message: types.Message):
-    await bot.send_message(message.from_user.id, 'Привет {0.first_name} '
-                                                 'Напишите код фильма для поиска (+эмодзи) '
-                                                 ''.format(message.from_user),
-                           reply_markup=nav.mainMenu)
+# # старт
+# @dp.message_handler(commands=['start', 'начать', 'старт'])
+# async def command_start(message: types.Message):
+#     await bot.send_message(message.from_user.id, 'Привет {0.first_name} '
+#                                                  'Напишите код фильма для поиска (+эмодзи) '
+#                                                  ''.format(message.from_user),
+#                            reply_markup=nav.mainMenu)
 
 
 # # меню
@@ -100,31 +98,69 @@ async def command_start(message: types.Message):
 #     else:
 #         await message.reply('Неизветсная команда')
 
-@dp.message_handler(commands="inline_url")
+
+# старт
+# @dp.message_handler(commands=['start', 'начать', 'старт'])
+# async def command_start(message: types.Message):
+#     await bot.send_message(message.from_user.id, 'Привет {0.first_name} '
+#                                                  'Напишите код фильма для поиска (+эмодзи) '
+#                                                  ''.format(message.from_user), reply_markup=keyboard)
+#     buttons = [
+#         types.InlineKeyboardButton(text="GitHub", url="https://github.com")]
+#     keyboard = types.InlineKeyboardMarkup(row_width=1)
+#     keyboard.add(*buttons)
+#     await message.answer("Кнопки-меню", reply_markup=keyboard)
+
+@dp.message_handler(commands=['start', 'старт'])
+async def cmd_start(message: types.Message):
+    buttons = [
+        types.InlineKeyboardButton(text='Найти фильм по коду', callback_data='url'),
+    ]
+    keyboard = types.InlineKeyboardMarkup(row_width=1)
+    keyboard.add(*buttons)
+    await message.answer('Привет {0.first_name}, напиши код фильма для поиска '.format(
+        message.from_user) + emoji.emojize(":eyes:"), reply_markup=keyboard)
+
+
+@dp.callback_query_handler(text='random_value')
+async def send_random_value(call: types.CallbackQuery):
+    await call.message.answer(str(randint(1, 10)))
+
+
+@dp.callback_query_handler(text='url')
+async def send_random_value(call: types.CallbackQuery):
+    # await call.message.answer(str(randint(1, 10)))
+
+    buttons = [
+        types.InlineKeyboardButton(text="GitHub", url="https://github.com"),
+        types.InlineKeyboardButton(text="1", url="https://t.me/test_film_123"),
+        types.InlineKeyboardButton(text="2", url="tg://resolve?domain=telegram"),
+        types.InlineKeyboardButton(text="3", url="tg://resolve?domain=telegram"),
+        types.InlineKeyboardButton(text="4", url="tg://resolve?domain=telegram"),
+        types.InlineKeyboardButton(text="5", url="tg://resolve?domain=telegram")
+    ]
+    keyboard = types.InlineKeyboardMarkup(row_width=1)
+    keyboard.add(*buttons)
+    await call.message.answer("Кнопки-ссылки", reply_markup=keyboard)
+
+
+@dp.message_handler(commands='inline_url')
 async def cmd_inline_url(message: types.Message):
     buttons = [
         types.InlineKeyboardButton(text="GitHub", url="https://github.com"),
-        types.InlineKeyboardButton(text="Оф. канал Telegram", url="tg://resolve?domain=telegram")
-        types.InlineKeyboardButton(text="Оф. канал Telegram", url="tg://resolve?domain=telegram")
-        types.InlineKeyboardButton(text="Оф. канал Telegram", url="tg://resolve?domain=telegram")
-        types.InlineKeyboardButton(text="Оф. канал Telegram", url="tg://resolve?domain=telegram")
+        types.InlineKeyboardButton(text="первый паблик", url="https://t.me/test_film_123"),
+        types.InlineKeyboardButton(text="Оф. канал Telegram", url="tg://resolve?domain=telegram"),
+        types.InlineKeyboardButton(text="Оф. канал Telegram", url="tg://resolve?domain=telegram"),
+        types.InlineKeyboardButton(text="Оф. канал Telegram", url="tg://resolve?domain=telegram"),
         types.InlineKeyboardButton(text="Оф. канал Telegram", url="tg://resolve?domain=telegram")
     ]
     keyboard = types.InlineKeyboardMarkup(row_width=1)
     keyboard.add(*buttons)
     await message.answer("Кнопки-ссылки", reply_markup=keyboard)
 
+
 # echo - заглушка
 
-# from aiogram import types
-@dp.message_handler(commands="start")
-async def cmd_start(message: types.Message):
-    keyboard = types.ReplyKeyboardMarkup()
-    button_1 = types.KeyboardButton(text="С пюрешкой")
-    keyboard.add(button_1)
-    button_2 = "Без пюрешки"
-    keyboard.add(button_2)
-    await message.answer("Как подавать котлеты?", reply_markup=keyboard)
 
 @dp.message_handler()
 async def echo_message(msg: types.Message):
