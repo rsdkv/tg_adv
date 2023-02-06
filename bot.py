@@ -38,6 +38,7 @@ async def subdone(message: types.Message):
     if await check_sub_channels(cfg.CHANNELS, message.from_user.id):
         await bot.send_message(message.from_user.id, 'Привет {0.first_name}, напиши код фильма для поиска '.format(
             message.from_user) + emoji.emojize(":eyes:"), reply_markup=nav.menuChannels())
+        await bot.send_message.answer(text="Спасибо, что воспользовались ботом!", show_alert=True)
     else:
         await bot.send_message(message.from_user.id, cfg.NOT_SUB_MESSAGE, reply_markup=nav.menuChannels())
 
@@ -45,10 +46,13 @@ async def subdone(message: types.Message):
 # echo - заглушка
 @dp.message_handler()
 async def echo_message(message: types.Message):
-    if await check_sub_channels(cfg.CHANNELS, message.from_user.id):
-        await bot.send_message(message.from_user.id, text='фильм под номером {film}'.format(film=message.text))
-    else:
-        await bot.send_message(message.from_user.id, cfg.NOT_SUB_MESSAGE, reply_markup=nav.menuChannels())
+    temp = message.text
+    await bot.send_message(message.from_user.id, 'Ваш фильм: {film}'.format(film=temp))
+    # if await check_sub_channels(cfg.CHANNELS, message.from_user.id):
+    #     temp = message.text
+    #     await bot.send_message(message.from_user.id, 'Ваш фильм: {film}'.format(film=temp))
+    # else:
+    #     await bot.send_message(message.from_user.id, cfg.NOT_SUB_MESSAGE, reply_markup=nav.menuChannels())
 
 
 @dp.message_handler(commands=['help'])
