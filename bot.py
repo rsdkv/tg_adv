@@ -42,8 +42,6 @@ async def subdone(message: types.Message):
     else:
         await bot.send_message(message.from_user.id, cfg.NOT_SUB_MESSAGE, reply_markup=nav.menuChannels())
 
-
-# echo - заглушка
 @dp.message_handler()
 async def echo_message(message: types.Message):
     temp = message.text
